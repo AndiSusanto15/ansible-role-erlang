@@ -1,0 +1,29 @@
+---
+- name: "Import Erlang/OTP GPG signing key [Debian/Ubuntu]"
+  apt_key:
+    url: "{{ erlang_deb_gpg_url }}"
+    state: present
+    validate_certs: false
+  register: _add_apt_key
+  until: _add_apt_key is succeeded
+  retries: 5
+  delay: 2
+
+- name: Add Erlang/OTP repository 
+  shell: echo "deb https://packages.erlang-solutions.com/ubuntu bionic contrib" | sudo tee /etc/apt/sources.list.d/erlang.list
+
+- name: Add Erlang/OTP repository pinning preferences [Debian/Ubuntu]
+  template:
+    src: erlang.j2
+    dest: "/etc/apt/preferences.d/erlang"
+    force: true
+    backup: true
+
+- name: Update cache
+  apt:
+    update_cache: true
+
+- name: Install Erlang [Debian/Ubuntu]
+  apt:
+    name: erlang
+    state: present

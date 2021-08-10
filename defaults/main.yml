@@ -1,0 +1,4 @@
+---
+# defaults file for roles/batutah.erlang
+erlang_deb_gpg_url: https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc
+erlang_series: 22.2
